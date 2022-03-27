@@ -95,4 +95,13 @@ public class SpartanFlowSteps {
 
         
     }
+
+    @Then("User deletes spartan {int}")
+    public void userDeletesSpartan(int id) {
+        if(id==0){
+            id = postResponse.path("data.id");
+        }
+
+
+    }
 }
