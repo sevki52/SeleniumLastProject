@@ -3,6 +3,7 @@ package com.cydeo.step_definitions;
 
 import com.cydeo.pages.pojo.Spartan;
 import com.cydeo.utilities.ConfigurationReader;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import static io.restassured.RestAssured.*;
@@ -19,6 +20,7 @@ public class SpartanFlowSteps {
     Response mockSpartanJSON;
     Response postResponse;
     Response getResponse;
+    Spartan mySpartan;
 
     int idFromPost;
 
@@ -33,7 +35,7 @@ public class SpartanFlowSteps {
     @When("User uses Mock Data to create a Spartan")
     public void userUsesMockDataToCreateASpartan() {
 
-        Spartan mySpartan = new Spartan();
+        mySpartan = new Spartan();
         mySpartan.setName(mockSpartanJSON.path("name")); // reading Mock API spartan response and path is name
         mySpartan.setGender(mockSpartanJSON.path("gender"));
         Long phone = Long.valueOf(mockSpartanJSON.path("phone").toString());
@@ -56,6 +58,7 @@ public class SpartanFlowSteps {
 
         if(id==0){
             id = postResponse.path("data.id");
+            System.out.println("id = " + id);
         }
             getResponse = given().accept(ContentType.JSON)
                     .and().pathParam("id", id)
@@ -71,4 +74,19 @@ public class SpartanFlowSteps {
         String actualName = getResponse.path("name");
         Assert.assertEquals(expectedName,actualName);
    }
+
+    @And("User Updates all the fields of created Spartan")
+    public void userUpdatesAllTheFieldsOfCreatedSpartan() {
+        mySpartan.setName("Oscar");
+        mySpartan.setGender("Male");
+        mySpartan.setPhone(555123456L);
+        
+        Response putResponse = given().accept(ContentType.JSON)
+                .and().pathParam("id",postResponse.path("data.id"))
+                .body(mySpartan)
+                .put(spartanUrl+"/api/spartans/{id}");
+        Assert.assertEquals(204,putResponse.statusCode());
+        putResponse.prettyPrint();
+        
+    }
 }
