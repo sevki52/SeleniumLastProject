@@ -17,10 +17,12 @@ public class SpartanFlowSteps {
     Response mockSpartanJSON;
     Response postResponse;
 
+    int idFromPost;
+
     @When("User sends a request to Mock API for a mock Spartan Data")
     public void userSendsARequestToMockAPIForAMockSpartanData() {
         mockSpartanJSON = given().accept(ContentType.JSON)
-                .and().header("X-API-Key","cb98a4c0")
+                .and().header("X-API-Key","cb98a4c0")  // I am sending authorization with headers
                 .get(mockUrl);
       }
 
@@ -41,19 +43,20 @@ public class SpartanFlowSteps {
 
                 .when().post(spartanUrl+"/api/spartans");
 
-        postResponse.prettyPrint();
-
-
     }
 
 
     @When("User sends a request to Spartan API with id {int}")
     public void user_sends_a_request_to_spartan_api_with_id(int id) {
 
-        Response response = given().accept(ContentType.JSON)
-                .and().pathParam("id",id)
-                .when().get(spartanUrl+"/api/spartans/{id}");
-        response.prettyPrint();
+        if(id==0){
+            id = postResponse.path("data.id");
+        }
+            Response response = given().accept(ContentType.JSON)
+                    .and().pathParam("id", id)
+                    .when().get(spartanUrl + "/api/spartans/{id}");
+            response.prettyPrint();
+
     }
 
 
