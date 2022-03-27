@@ -11,6 +11,8 @@ import static io.restassured.RestAssured.*;
 
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+
+import org.hamcrest.Matchers;
 import org.junit.Assert;
 
 public class SpartanFlowSteps {
@@ -102,6 +104,20 @@ public class SpartanFlowSteps {
             id = postResponse.path("data.id");
         }
 
+        given().pathParam("id",id)
+                .when()
+                .delete(spartanUrl+"/api/spartans/{id}")
+                .then()
+                .statusCode(204);
+
+        given().accept(ContentType.JSON)
+                .and()
+                .pathParam("id",id)
+                .and()
+                .get(spartanUrl+"/api/spartans/{id}")
+                .then()
+                .statusCode(404)
+                .body("error",Matchers.equalTo("Not Found"));
 
     }
 }
