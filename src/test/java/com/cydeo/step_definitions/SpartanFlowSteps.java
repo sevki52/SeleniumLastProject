@@ -11,12 +11,15 @@ import io.restassured.response.Response;
 
 public class SpartanFlowSteps {
 
-
+    String spartanUrl = ConfigurationReader.get("spartan.apiUrl");
+    String mockUrl = ConfigurationReader.get("mock.apiUrl");
 
     @When("User sends a request to Mock API for a mock Spartan Data")
     public void userSendsARequestToMockAPIForAMockSpartanData() {
         Response response = given().accept(ContentType.JSON)
-                .and().header()
+                .and().header("X-API-Key","cb98a4c0")
+                .get(mockUrl);
+        response.prettyPrint();
 
     }
 
@@ -25,7 +28,7 @@ public class SpartanFlowSteps {
 
         Response response = given().accept(ContentType.JSON)
                 .and().pathParam("id",id)
-                .when().get("/api/spartans/{id}");
+                .when().get(spartanUrl+"/api/spartans/{id}");
         response.prettyPrint();
     }
 
