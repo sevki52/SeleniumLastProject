@@ -63,7 +63,7 @@ public class SpartanFlowSteps {
             getResponse = given().accept(ContentType.JSON)
                     .and().pathParam("id", id)
                     .when().get(spartanUrl + "/api/spartans/{id}");
-
+            getResponse.prettyPrint();
             Assert.assertEquals(200,getResponse.statusCode());
     }
 
@@ -77,16 +77,22 @@ public class SpartanFlowSteps {
 
     @And("User Updates all the fields of created Spartan")
     public void userUpdatesAllTheFieldsOfCreatedSpartan() {
-        mySpartan.setName("Oscar");
+        mySpartan.setName("AgentSmith");
         mySpartan.setGender("Male");
-        mySpartan.setPhone(555123456L);
-        
+        mySpartan.setPhone(5551234566L);
+
+        int id = postResponse.path("data.id");
         Response putResponse = given().accept(ContentType.JSON)
-                .and().pathParam("id",postResponse.path("data.id"))
+                .and()
+                .contentType(ContentType.JSON)   // Hey API I am sending you JSON body
+                .and().pathParam("id",id)
+                .and()
                 .body(mySpartan)
+                .when()
                 .put(spartanUrl+"/api/spartans/{id}");
         Assert.assertEquals(204,putResponse.statusCode());
-        putResponse.prettyPrint();
+        Assert.assertEquals("",putResponse.body().asString());
+
         
     }
 }

@@ -6,3 +6,4 @@ Feature: Test Spartan API with complete CRUD operations
     And User sends a request to Spartan API with id 0
     Then Created Spartan has same information with Post Request
     And User Updates all the fields of created Spartan
+    And User sends a request to Spartan API with id 0
