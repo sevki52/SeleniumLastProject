@@ -3,12 +3,14 @@ package com.cydeo.step_definitions;
 
 import com.cydeo.pages.pojo.Spartan;
 import com.cydeo.utilities.ConfigurationReader;
+import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import static io.restassured.RestAssured.*;
 
 
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import org.junit.Assert;
 
 public class SpartanFlowSteps {
 
@@ -16,6 +18,7 @@ public class SpartanFlowSteps {
     String mockUrl = ConfigurationReader.get("mock.apiUrl");
     Response mockSpartanJSON;
     Response postResponse;
+    Response getResponse;
 
     int idFromPost;
 
@@ -24,6 +27,7 @@ public class SpartanFlowSteps {
         mockSpartanJSON = given().accept(ContentType.JSON)
                 .and().header("X-API-Key","cb98a4c0")  // I am sending authorization with headers
                 .get(mockUrl);
+        Assert.assertEquals(200,mockSpartanJSON.statusCode());
       }
 
     @When("User uses Mock Data to create a Spartan")
@@ -43,6 +47,7 @@ public class SpartanFlowSteps {
 
                 .when().post(spartanUrl+"/api/spartans");
 
+        Assert.assertEquals(201,postResponse.statusCode());
     }
 
 
@@ -52,13 +57,18 @@ public class SpartanFlowSteps {
         if(id==0){
             id = postResponse.path("data.id");
         }
-            Response response = given().accept(ContentType.JSON)
+            getResponse = given().accept(ContentType.JSON)
                     .and().pathParam("id", id)
                     .when().get(spartanUrl + "/api/spartans/{id}");
-            response.prettyPrint();
 
+            Assert.assertEquals(200,getResponse.statusCode());
     }
 
 
-
+    @Then("Created Spartan has same information with Post Request")
+    public void createdSpartanHasSameInformationWithPostRequest() {
+        String expectedName = postResponse.path("data.name");
+        String actualName = getResponse.path("name");
+        Assert.assertEquals(expectedName,actualName);
+   }
 }
