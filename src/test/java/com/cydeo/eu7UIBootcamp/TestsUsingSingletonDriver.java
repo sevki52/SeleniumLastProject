@@ -45,7 +45,5 @@ public class TestsUsingSingletonDriver {
         Assert.assertTrue(y_CoordinateOfUserNameBox<y_CoordinateOfPasswordBox);
         Assert.assertTrue(y_CoordinateOfPasswordBox<y_CoordinateOfButton);
 
-
-
     }
 }
