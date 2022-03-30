@@ -1,4 +1,10 @@
 package com.cydeo.pages.pojo;
 
-public class BasePage {
+import com.cydeo.utilities.Driver;
+import org.openqa.selenium.support.PageFactory;
+
+public abstract class BasePage {
+    public BasePage(){
+        PageFactory.initElements(Driver.get(),this);
+    }
 }
