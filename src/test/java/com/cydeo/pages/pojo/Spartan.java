@@ -26,6 +26,7 @@ public class Spartan {
      * 
      */
     public Spartan() {
+
     }
 
     /**
